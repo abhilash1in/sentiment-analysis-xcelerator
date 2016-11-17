@@ -6,8 +6,8 @@ from nltk.classify.util import accuracy
 from nltk.classify import SklearnClassifier
 from sklearn.naive_bayes import BernoulliNB
 from sklearn.svm import SVC
-
 from nltk.classify import NaiveBayesClassifier
+import pickle
 
 def format_sentence(sentence):
 	return {word:True for word in word_tokenize(sentence)}
@@ -24,27 +24,42 @@ def extract_entity_names(t):
 
     return entity_names
 
+def save_classifier(classifier):
+   f = open('my_classifier.pickle', 'wb')
+   pickle.dump(classifier, f, -1)
+   f.close()
 
-pos_data = []
-with open('data/rt-polaritydata/rt-polarity-pos.txt', encoding = 'latin-1') as f:
-	for line in f:
-		pos_data.append([format_sentence(line),'pos'])
+def load_classifier():
+   f = open('my_classifier.pickle', 'rb')
+   classifier = pickle.load(f)
+   f.close()
+   return classifier
 
-neg_data = []
-with open('data/rt-polaritydata/rt-polarity-neg.txt', encoding = 'latin-1') as f:
-	for line in f:
-		neg_data.append([format_sentence(line),'neg'])
 
-training_data = pos_data[:5000] + neg_data[:5000]
-testing_data = pos_data[5000:] + neg_data[5000:]
+
+# pos_data = []
+# with open('data/rt-polaritydata/rt-polarity-pos.txt', encoding = 'latin-1') as f:
+# 	for line in f:
+# 		pos_data.append([format_sentence(line),'pos'])
+
+# neg_data = []
+# with open('data/rt-polaritydata/rt-polarity-neg.txt', encoding = 'latin-1') as f:
+# 	for line in f:
+# 		neg_data.append([format_sentence(line),'neg'])
+
+# training_data = pos_data[:5000] + neg_data[:5000]
+# testing_data = pos_data[5000:] + neg_data[5000:]
 
 print('\n')
 
-bayesModel = NaiveBayesClassifier.train(training_data)
+bayesModel = load_classifier()
+print('Classifier Loaded!')
+
+# bayesModel = NaiveBayesClassifier.train(training_data)
 # print(bayesModel.classify(format_sentence('this is a nice article')))
 # print(bayesModel.classify(format_sentence('this article is horrible!!')))
-print('Training completed!')
-print('Accuracy: ' + str(accuracy(bayesModel,testing_data)))
+# print('Training completed!')
+# print('Accuracy: ' + str(accuracy(bayesModel,testing_data)))
 
 
 # bernoulliNBModel = SklearnClassifier(BernoulliNB()).train(training_data)
@@ -71,10 +86,7 @@ for sentence in sentences:
 	entity_names.extend(extract_entity_names(namedEnt))
 
 print('\n')
-
 print('The review is : '+ str(bayesModel.classify(format_sentence(review))))
-# print('The review is : '+ str(bernoulliNBModel.classify(format_sentence(review))))
-# print('The review is : '+ str(SVCModel.classify(format_sentence(review))))
 
 if(len(entity_names) > 0):
 	result_named_entities = 'Named Entities are: '+''.join(str(word)+', ' for word in entity_names)
