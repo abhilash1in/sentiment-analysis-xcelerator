@@ -35,44 +35,10 @@ def load_classifier():
    f.close()
    return classifier
 
-
-
-# pos_data = []
-# with open('data/rt-polaritydata/rt-polarity-pos.txt', encoding = 'latin-1') as f:
-# 	for line in f:
-# 		pos_data.append([format_sentence(line),'pos'])
-
-# neg_data = []
-# with open('data/rt-polaritydata/rt-polarity-neg.txt', encoding = 'latin-1') as f:
-# 	for line in f:
-# 		neg_data.append([format_sentence(line),'neg'])
-
-# training_data = pos_data[:5000] + neg_data[:5000]
-# testing_data = pos_data[5000:] + neg_data[5000:]
-
 print('\n')
 
 bayesModel = load_classifier()
 print('Classifier Loaded!')
-
-# bayesModel = NaiveBayesClassifier.train(training_data)
-# print(bayesModel.classify(format_sentence('this is a nice article')))
-# print(bayesModel.classify(format_sentence('this article is horrible!!')))
-# print('Training completed!')
-# print('Accuracy: ' + str(accuracy(bayesModel,testing_data)))
-
-
-# bernoulliNBModel = SklearnClassifier(BernoulliNB()).train(training_data)
-# print(bernoulliNBModel.classify(format_sentence('this is a nice article')))
-# print(bernoulliNBModel.classify(format_sentence('this article is horrible!!')))
-# print('Training completed!')
-# print('Accuracy: ' + str(accuracy(bernoulliNBModel,testing_data)))
-
-
-# SVCModel = SklearnClassifier(SVC(), sparse=False).train(training_data)
-# print(SVCModel.classify(format_sentence('this is a nice article')))
-# print(SVCModel.classify(format_sentence('this article is horrible!!')))
-# print(accuracy(SVCModel,testing_data))
 
 print('\n')
 
@@ -89,7 +55,7 @@ print('\n')
 print('The review is : '+ str(bayesModel.classify(format_sentence(review))))
 
 if(len(entity_names) > 0):
-	result_named_entities = 'Named Entities are: '+''.join(str(word)+', ' for word in entity_names)
+	result_named_entities = 'Named Entities are: '+''.join(str(word)+', ' for word in set(entity_names))
 	new_result = list(result_named_entities)
 	new_result[len(result_named_entities) - 2	] = '.'
 	print(''.join(new_result))
